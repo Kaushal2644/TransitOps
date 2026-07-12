@@ -50,6 +50,10 @@ const tripSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    revenue: {
+      type: Number,
+      default: 0, // Freight/billing amount for this trip, used in ROI calc
+    },
   },
   { timestamps: true }
 );

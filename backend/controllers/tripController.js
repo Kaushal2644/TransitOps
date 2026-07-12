@@ -190,7 +190,7 @@ export const dispatchTrip = async (req, res) => {
 // @route PATCH /api/trips/:id/complete
 export const completeTrip = async (req, res) => {
   try {
-    const { finalOdometer, fuelConsumed } = req.body;
+    const { finalOdometer, fuelConsumed, revenue } = req.body;
 
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: "Trip not found" });
@@ -209,6 +209,7 @@ export const completeTrip = async (req, res) => {
     trip.status = "Completed";
     trip.finalOdometer = finalOdometer;
     trip.fuelConsumed = fuelConsumed;
+    trip.revenue = revenue || 0;
 
     if (vehicle) {
       vehicle.odometer = finalOdometer;

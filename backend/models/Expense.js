@@ -38,9 +38,8 @@ const expenseSchema = new mongoose.Schema(
 );
 
 // Auto-calc total before saving
-expenseSchema.pre("save", function (next) {
+expenseSchema.pre("save", function () {
   this.total = (this.toll || 0) + (this.other || 0) + (this.maintenanceLinked || 0);
-  next();
 });
 
 const Expense = mongoose.model("Expense", expenseSchema);
