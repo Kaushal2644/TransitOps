@@ -19,7 +19,6 @@ connectDB();
 
 const app = express();
 
-// ✅ THESE TWO LINES WERE MISSING — add them first, before cors/cookieParser/routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
