@@ -1,5 +1,6 @@
 import MaintenanceLog from "../models/MaintenanceLog.js";
 import Vehicle from "../models/Vehicle.js";
+import { emitMaintenanceRelated } from "../utils/emitSocketEvent.js";
 
 // @desc  Create a maintenance record — auto sets vehicle to "In Shop"
 // @route POST /api/maintenance
@@ -44,6 +45,7 @@ export const createMaintenanceLog = async (req, res) => {
 
     const populated = await log.populate("vehicle", "registrationNumber nameModel");
     res.status(201).json(populated);
+    emitMaintenanceRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -107,6 +109,7 @@ export const updateMaintenanceLog = async (req, res) => {
 
     await log.save();
     res.json(log);
+    emitMaintenanceRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -134,6 +137,7 @@ export const closeMaintenanceLog = async (req, res) => {
     }
 
     res.json({ message: "Maintenance closed, vehicle restored", log, vehicle });
+    emitMaintenanceRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -152,6 +156,7 @@ export const deleteMaintenanceLog = async (req, res) => {
 
     await log.deleteOne();
     res.json({ message: "Maintenance log removed" });
+    emitMaintenanceRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

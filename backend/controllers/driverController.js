@@ -1,4 +1,5 @@
 import Driver from "../models/Driver.js";
+import { emitDriverRelated } from "../utils/emitSocketEvent.js";
 
 // @desc  Create a new driver
 // @route POST /api/drivers
@@ -25,6 +26,7 @@ export const createDriver = async (req, res) => {
     });
 
     res.status(201).json(driver);
+    emitDriverRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -92,6 +94,7 @@ export const updateDriver = async (req, res) => {
     Object.assign(driver, req.body);
     await driver.save();
     res.json(driver);
+    emitDriverRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -110,6 +113,7 @@ export const deleteDriver = async (req, res) => {
 
     await driver.deleteOne();
     res.json({ message: "Driver removed" });
+    emitDriverRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -125,6 +129,7 @@ export const toggleSuspend = async (req, res) => {
     driver.status = driver.status === "Suspended" ? "Available" : "Suspended";
     await driver.save();
     res.json(driver);
+    emitDriverRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

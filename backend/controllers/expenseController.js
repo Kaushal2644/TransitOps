@@ -2,6 +2,7 @@ import Expense from "../models/Expense.js";
 import MaintenanceLog from "../models/MaintenanceLog.js";
 import FuelLog from "../models/FuelLog.js";
 import Vehicle from "../models/Vehicle.js";
+import { emitExpenseRelated } from "../utils/emitSocketEvent.js";
 
 // @desc  Log an expense (toll / other) tied to a trip & vehicle
 // @route POST /api/expenses
@@ -30,6 +31,7 @@ export const createExpense = async (req, res) => {
     ]);
 
     res.status(201).json(populated);
+    emitExpenseRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -77,6 +79,7 @@ export const updateExpense = async (req, res) => {
 
     await expense.save(); // pre-save hook recalculates total
     res.json(expense);
+    emitExpenseRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -91,6 +94,7 @@ export const deleteExpense = async (req, res) => {
 
     await expense.deleteOne();
     res.json({ message: "Expense removed" });
+    emitExpenseRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

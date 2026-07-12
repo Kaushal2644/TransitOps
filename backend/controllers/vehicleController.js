@@ -1,4 +1,5 @@
 import Vehicle from "../models/Vehicle.js";
+import { emitVehicleRelated } from "../utils/emitSocketEvent.js";
 
 // @desc  Create a new vehicle
 // @route POST /api/vehicles
@@ -26,6 +27,7 @@ export const createVehicle = async (req, res) => {
     });
 
     res.status(201).json(vehicle);
+    emitVehicleRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -92,6 +94,7 @@ export const updateVehicle = async (req, res) => {
     Object.assign(vehicle, req.body);
     await vehicle.save();
     res.json(vehicle);
+    emitVehicleRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -110,6 +113,7 @@ export const deleteVehicle = async (req, res) => {
 
     await vehicle.deleteOne();
     res.json({ message: "Vehicle removed" });
+    emitVehicleRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

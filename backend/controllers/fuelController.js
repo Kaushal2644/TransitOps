@@ -1,5 +1,6 @@
 import FuelLog from "../models/FuelLog.js";
 import Vehicle from "../models/Vehicle.js";
+import { emitFuelRelated } from "../utils/emitSocketEvent.js";
 
 // @desc  Log a fuel entry
 // @route POST /api/fuel
@@ -24,6 +25,7 @@ export const createFuelLog = async (req, res) => {
 
     const populated = await log.populate("vehicle", "registrationNumber nameModel");
     res.status(201).json(populated);
+    emitFuelRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -69,6 +71,7 @@ export const updateFuelLog = async (req, res) => {
 
     await log.save();
     res.json(log);
+    emitFuelRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -83,6 +86,7 @@ export const deleteFuelLog = async (req, res) => {
 
     await log.deleteOne();
     res.json({ message: "Fuel log removed" });
+    emitFuelRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

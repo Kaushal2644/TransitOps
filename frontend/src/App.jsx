@@ -1,29 +1,36 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import Login from "./pages/Login";
+import { SocketProvider } from "./context/SocketContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-
-function Placeholder({ title }) {
-  return <div className="p-8 text-white text-xl">{title} — coming in next step</div>;
-}
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import VehicleRegistry from "./pages/VehicleRegistry";
+import Drivers from "./pages/Drivers";
+import TripDispatcher from "./pages/TripDispatcher";
+import Maintenance from "./pages/Maintenance";
+import FuelExpense from "./pages/FuelExpense";
+import Reports from "./pages/Reports";
+import SettingsPage from "./pages/SettingsPage";
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <SocketProvider>
+        <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Placeholder title="Dashboard" />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/fleet" element={<ProtectedRoute><VehicleRegistry /></ProtectedRoute>} />
+          <Route path="/drivers" element={<ProtectedRoute><Drivers /></ProtectedRoute>} />
+          <Route path="/trips" element={<ProtectedRoute><TripDispatcher /></ProtectedRoute>} />
+          <Route path="/maintenance" element={<ProtectedRoute><Maintenance /></ProtectedRoute>} />
+          <Route path="/fuel-expenses" element={<ProtectedRoute><FuelExpense /></ProtectedRoute>} />
+          <Route path="/analytics" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
+      </SocketProvider>
     </AuthProvider>
   );
 }

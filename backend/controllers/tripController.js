@@ -2,6 +2,7 @@ import Trip from "../models/Trip.js";
 import Vehicle from "../models/Vehicle.js";
 import Driver from "../models/Driver.js";
 import generateTripCode from "../utils/generateTripCode.js";
+import { emitTripRelated } from "../utils/emitSocketEvent.js";
 
 // @desc  Create a trip (status: Draft)
 // @route POST /api/trips
@@ -40,6 +41,7 @@ export const createTrip = async (req, res) => {
     });
 
     res.status(201).json(trip);
+    emitTripRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -113,6 +115,7 @@ export const updateTrip = async (req, res) => {
 
     await trip.save();
     res.json(trip);
+    emitTripRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -181,6 +184,7 @@ export const dispatchTrip = async (req, res) => {
     await driver.save();
 
     res.json({ message: "Trip dispatched successfully", trip });
+    emitTripRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -224,6 +228,7 @@ export const completeTrip = async (req, res) => {
 
     await trip.save();
     res.json({ message: "Trip completed successfully", trip });
+    emitTripRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -260,6 +265,7 @@ export const cancelTrip = async (req, res) => {
     }
 
     res.json({ message: "Trip cancelled", trip });
+    emitTripRelated();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

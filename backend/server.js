@@ -1,8 +1,10 @@
+import http from "http";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
+import { initSocket } from "./socket/index.js";
 import authRoutes from "./routes/authRoutes.js";
 import vehicleRoutes from "./routes/vehicleRoutes.js";
 import driverRoutes from "./routes/driverRoutes.js";
@@ -17,8 +19,10 @@ connectDB();
 
 const app = express();
 
+// ✅ THESE TWO LINES WERE MISSING — add them first, before cors/cookieParser/routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 app.use(
   cors({
@@ -41,6 +45,9 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const httpServer = http.createServer(app);
+initSocket(httpServer);
+
+httpServer.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
